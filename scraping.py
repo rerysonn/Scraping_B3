@@ -1,6 +1,7 @@
 import pandas as pd
 import time
 import os
+import boto3
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -59,4 +60,16 @@ else:
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
 
+
+
     print(df_loaded)
+
+s3_client = boto3.client('s3', region_name='us-east-1')
+bucket_name = 'fiap2024-mlet-reryson'
+
+s3_parquet_path = f'Parquet/{year}/{month}/{day}/ibovespa_{current_date_american}.parquet'
+
+s3_client.upload_file(parquet_output_path, bucket_name, s3_parquet_path)
+print(f"Arquivo Parquet enviado para o S3: {s3_parquet_path}")
+
+driver.quit()
